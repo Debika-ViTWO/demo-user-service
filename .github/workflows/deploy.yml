@@ -3,7 +3,7 @@ name: Deploy User Service to EC2
 on:
   push:
     branches:
-      - main  # Trigger deployment only when there's a push to the 'main' branch
+      - main
 
 jobs:
   build-and-deploy:
@@ -20,23 +20,17 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: debikadev
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          password: DebikaVitwo9#
 
       - name: Build and push Docker image
         run: |
           docker build -t debikadev/user-service:latest .
           docker push debikadev/user-service:latest
 
-      - name: Setup SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2-key.pem
-          chmod 600 ~/.ssh/ec2-key.pem
-
       - name: SSH to EC2 and deploy
         uses: appleboy/ssh-action@v0.1.5
         with:
-          host: 172.31.32.113
+          host: 13.127.138.173
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
