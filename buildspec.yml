@@ -5,7 +5,7 @@ phases:
     commands:
       - echo Logging in to Docker Hub...
       - docker --version
-      - echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
+      - echo DebikaVitwo9# | docker login -u debikadev --password-stdin
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
       - IMAGE_NAME=debikadev/user-service
