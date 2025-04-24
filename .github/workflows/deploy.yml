@@ -34,7 +34,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
+            echo "CONNECTED!"
             docker pull debikadev/user-service:latest
             docker stop user-service || true
             docker rm user-service || true
             docker run -d -p 8282:8282 --name user-service debikadev/user-service:latest
+          debug: true
