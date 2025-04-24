@@ -1,0 +1,26 @@
+
+services:
+  user-service:
+    container_name: demo-user-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8282"
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://user-mysql:3306/userdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      - user-mysql
+
+  user-mysql:
+    image: mysql:8
+    container_name: user-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: userdb
+    ports:
+      - "3306:3306"
+    restart: always
