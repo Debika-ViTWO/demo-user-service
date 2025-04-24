@@ -33,8 +33,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
+          timeout: 300s
           script: |
-            echo "CONNECTED!"
+            echo "Testing connection"
             docker pull debikadev/user-service:latest
             docker stop user-service || true
             docker rm user-service || true
