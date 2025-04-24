@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Docker Hub...
+      - docker --version
+      - echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+      - IMAGE_NAME=debikadev/user-service
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building Docker image...
+      - docker build -t $IMAGE_NAME:latest .
+      - docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing Docker images to Docker Hub...
+      - docker push $IMAGE_NAME:latest
+      - docker push $IMAGE_NAME:$IMAGE_TAG
+      - echo Writing imagedefinitions.json for ECS (optional if using CodeDeploy or ECS)
+      - printf '[{"name":"user-service","imageUri":"%s"}]' "$IMAGE_NAME:$IMAGE_TAG" > imagedefinitions.json
+artifacts:
+  files:
+    - imagedefinitions.json
